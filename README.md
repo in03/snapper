@@ -16,26 +16,29 @@ Snapshots just sounds cool. They're just timelines with a version suffix:
 ## How do I install it?
 
 ### A Warning about Python 3.6
-Because DaVinci Resolve requires Python 3.6 to communicate with it's API, no versions over Python 3.6 will work with *Resolve Proxy Encoder*.
-Unfortunately this means that *Resolve Proxy Encoder* may get stuck using older versions of certain packages as they begin to drop support for 3.6.
-It also means that security patches for some dependencies won't make it into *Resolve Proxy Encoder* 
-This kind of setup almost guarantees dependency conflicts if you have multiple Python CLI tools you keep installed.
-To mitigate this you can:
+Because DaVinci Resolve requires Python 3.6 to communicate with it's API, no versions over Python 3.6 will work with this app. To avoid dependency conflicts using a tool like *pipx* to isolate installations but keep CLI entrypoints exposed is recommended:
 
-- Use Python 3.6 for this application **ONLY** and install a newer Python alongside it for your other needs.
-
-- Install a tool like *pipx* that isolates Python CLI tools with their own virtual environments but keeps the CLI entrypoints exposed. (Recommended)
-
-
-### CLI / Worker
-The CLI app is bundled with everything necessary to queue from Resolve and start workers that run the encoding.
-```
-py -3.6 -m pip install git+https://github.com/in03/resolve-snapshot-timeline
-```
-Or with *pipx*
 ``` 
 pipx install git+https://github.com/in03/resolve-snapshot-timeline
 ```
+
+## How do I use it?
+
+```
+rsnaptime --help
+
+RESOLVE SNAPSHOT TIMELINE 📷
+
+Usage: rsnaptime new [OPTIONS]
+
+  Create a new timeline snapshot
+
+Options:
+  --dry-run / --no-dry-run  Don't duplicate the timeline, just return the next
+                            version name  [default: no-dry-run]
+  --help                    Show this message and exit.
+```
+
 
 
 ## How can I contribute?
@@ -49,19 +52,3 @@ poetry install
 rsnaptime
 ```
 If you're unfamiliar with using Poetry for dependency management and packaging, [give it a look](https://python-poetry.org/docs/basic-usage).
-
-## How do I use it?
-
-```
-RESOLVE SNAPSHOT TIMELINE 📷
-
-Usage: rsnaptime new [OPTIONS]
-
-  Create a new timeline snapshot
-
-Options:
-  --dry-run / --no-dry-run  Don't duplicate the timeline, just return the next
-                            version name  [default: no-dry-run]
-  --help                    Show this message and exit.
-PS C:\Users\Caleb\Documents\Programming\local\resolve-snapshot-timeline> 
-```
