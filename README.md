@@ -1,5 +1,5 @@
 # Resolve Snapshot Timeline
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/resolve-snapshot-timeline/main.svg)](https://results.pre-commit.ci/latest/github/in03/resolve-snapshot-timeline/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/Resolve-Snapshot-Timeline/main.svg)](https://results.pre-commit.ci/latest/github/in03/Resolve-Snapshot-Timeline/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
  
 ## What's it for? ##
 Sometimes you want to try out some risky idea, create a couple of variations of a clip-sequence to compare or even just have some timeline backups within easy reach.
