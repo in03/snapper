@@ -19,10 +19,12 @@ Snapshots just sounds cool. They're just timelines with a version suffix:
 Because DaVinci Resolve requires Python 3.6 to communicate with it's API, no versions over Python 3.6 will work with this app. To avoid dependency conflicts using a tool like *pipx* to isolate installations but keep CLI entrypoints exposed is recommended:
 
 ``` 
-pipx install git+https://github.com/in03/resolve-snapshot-timeline
+pipx install git+https://github.com/in03/resolve-snapshot-timelineg
 ```
 
 ## How do I use it?
+
+![](https://github.com/in03/Resolve-Snapshot-Timeline/blob/main/assets/usage_demo.gif)
 
 ```
 rsnaptime --help
