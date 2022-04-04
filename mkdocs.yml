@@ -1,0 +1,20 @@
+site_name: Resolve Snapshot Timeline
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocstrings
+  - mkdocstrings:
+      watch: 
+        - resolve_snapshot_timeline
+      handlers:
+        python:
+          rendering:
+            show_source: true
+            show_submodules: false
+
+nav:
+  - About: about.md
+  - User guide: user-guide/
+  - Code Reference: code-reference.md

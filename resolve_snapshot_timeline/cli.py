@@ -1,4 +1,6 @@
-#!/usr/bin/python3.6
+""" 
+Module to define CLI using Typer
+"""
 
 import logging
 import re
