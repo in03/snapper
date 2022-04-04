@@ -1,4 +1,4 @@
-ame: Build Release Binary
+name: Build Release Binary
 
 on:
   push:
