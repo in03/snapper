@@ -6,7 +6,7 @@ authors = ["Caleb Trevatt <in03@users.noreply.github.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.6.2, <3.7"
+python = "^3.10.0, <4.0.0"
 rich = "^12.0.1"
 natsort = "^8.1.0"
 pyfiglet = "^0.8.post1"
@@ -20,5 +20,5 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-rsnaptime = "resolve_snapshot_timeline.cli:app"
+snapper = "resolve_snapshot_timeline.cli:app"
 

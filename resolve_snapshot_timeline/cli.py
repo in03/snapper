@@ -5,21 +5,24 @@ Module to define CLI using Typer
 import logging
 import re
 
-from rich import print
 import typer
-
 from natsort import natsorted
+from rich import print
 
 from resolve_snapshot_timeline import utils
 from resolve_snapshot_timeline.resolve import ResolveObjects
 
 utils.setup_rich_logging()
+from pyfiglet import Figlet
+
 logger = logging.getLogger(__name__)
 logger.setLevel("INFO")
 
-app = typer.Typer()
+fig = Figlet(font="rectangles")
 
-print("\n[bold green u]RESOLVE SNAPSHOT TIMELINE[/bold green u] :camera:\n")
+app = typer.Typer()
+print(fig.renderText("snapper"))
+print("[bold]Create and manage DaVinci Resolve timeline revisions :fish:\n")
 
 
 @app.command()
@@ -33,7 +36,7 @@ def new(
     project_manager = r_.resolve.GetProjectManager()
     project = project_manager.GetCurrentProject()
 
-    logger.info(f"[cyan]Getting current timeline :bulb:")
+    print(f"[cyan]Getting current timeline :bulb:")
 
     current_timeline = project.GetCurrentTimeline()
     current_timeline_name = current_timeline.GetName()
@@ -81,21 +84,22 @@ def new(
         logger.debug(f"[magenta]Next snapshot version: '{next_version}'")
         return next_version
 
-    logger.info(f"[cyan]Getting next snapshot version :mag_right:")
+    print(f"[cyan]Getting next snapshot version :mag_right:")
     next_version_name = get_next_version_name()
 
     if dry_run:
 
-        logger.warning(
+        print(
             "[bold][yellow]Dry-run enabled:[/bold] No timeline snapshot will be created."
         )
         utils.app_exit(0)
 
-    logger.info(f"[yellow]Cloning timeline :dna:")
+    print(f"[yellow]Cloning timeline :dna:")
     current_timeline.SetName(next_version_name)  # Rename original
     current_timeline.DuplicateTimeline(current_timeline_name)
-
-    logger.info(f"[green]Done! :heavy_check_mark:")
+    print(
+        f"[green]Latest snapshot: [bold]'{next_version_name}'[/bold] :heavy_check_mark:"
+    )
 
 
 def tidy_into_snapshots_folder():
@@ -106,19 +110,17 @@ def tidy_into_snapshots_folder():
 @app.callback()
 def main(
     verbose: bool = typer.Option(False, help="Log debug messages"),
-    quiet: bool = typer.Option(False, help="Log nothing"),
 ):
     """
-    Do yourself a favour and create frequent timeline snapshots :camera_flash:
-    Don't leave messy little experiments at the end of your timelines :no_entry:
-    Keep it tidy. Keepy it clean. :sparkles:
+    Do yourself a favour and create frequent timeline snapshots.
+    Don't leave messy little experiments at the end of your timelines.
+    Keep it tidy. Keep it clean.
+
+    Just type: "snapper new"
     """
 
     if verbose:
         logger.setLevel("DEBUG")
-
-    if quiet:
-        logger.setLevel("WARNING")
 
     # Get resolve variables
     global r_
