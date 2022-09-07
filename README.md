@@ -3,7 +3,7 @@
  
 > **Warning**
 >
-> This version only support Resolve 18.
+> This version only supports Resolve 18.
 > Checkout the 'resolve-17' branch. Development on that branch has stopped, but pull requests are welcome.
 > Versions below 17 have not been tested but should theoretically work.
 
