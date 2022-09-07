@@ -2,6 +2,7 @@
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/snapper/main.svg)](https://results.pre-commit.ci/latest/github/in03/snapper/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
  
 > **Warning**
+>
 > This version only support Resolve 18.
 > Checkout the 'resolve-17' branch. Development on that branch has stopped, but pull requests are welcome.
 > Versions below 17 have not been tested but should theoretically work.
