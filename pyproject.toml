@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "resolve-snapshot-timeline"
-version = "0.1.0"
+name = "snapper"
+version = "0.2.0"
 description = "Create a new timeline 'snapshot' to revert to when trying out risky ideas in DaVinci Resolve"
 authors = ["Caleb Trevatt <in03@users.noreply.github.com>"]
 license = "MIT"
@@ -20,5 +20,5 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-snapper = "resolve_snapshot_timeline.cli:app"
+snapper = "snapper.cli:app"
 

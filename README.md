@@ -1,5 +1,5 @@
 # Resolve Snapshot Timeline
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/Resolve-Snapshot-Timeline/main.svg)](https://results.pre-commit.ci/latest/github/in03/Resolve-Snapshot-Timeline/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/snapper/main.svg)](https://results.pre-commit.ci/latest/github/in03/snapper/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
  
 ## What's it for? ##
 Sometimes you want to try out some risky idea, create a couple of variations of a clip-sequence to compare or even just have some timeline backups within easy reach.
@@ -19,12 +19,12 @@ Snapshots just sounds cool. They're just timelines with a version suffix:
 Because DaVinci Resolve requires Python 3.6 to communicate with it's API, no versions over Python 3.6 will work with this app. To avoid dependency conflicts, using a tool like *pipx* to isolate installations but keep CLI entrypoints exposed is recommended:
 
 ``` 
-pipx install git+https://github.com/in03/resolve-snapshot-timelineg
+pipx install git+https://github.com/in03/snapperg
 ```
 
 ## How do I use it?
 
-![](https://github.com/in03/Resolve-Snapshot-Timeline/blob/main/assets/usage_demo.gif)
+![](https://github.com/in03/snapper/blob/main/assets/usage_demo.gif)
 
 ```
 rsnaptime --help
@@ -46,8 +46,8 @@ Options:
 ## How can I contribute?
 Clone the repo, install dependencies, call from poetry shell:
 ```
-git clone https://github.com/in03/resolve-snapshot-timeline
-cd resolve-snapshot-timeline
+git clone https://github.com/in03/snapper
+cd snapper
 py -3.6 -m pip install poetry
 py -3.6 -m poetry shell
 poetry install

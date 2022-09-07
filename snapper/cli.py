@@ -9,8 +9,8 @@ import typer
 from natsort import natsorted
 from rich import print
 
-from resolve_snapshot_timeline import utils
-from resolve_snapshot_timeline.resolve import ResolveObjects
+from snapper import utils
+from snapper.resolve import ResolveObjects
 
 utils.setup_rich_logging()
 from pyfiglet import Figlet

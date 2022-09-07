@@ -4,7 +4,7 @@ import sys
 
 from rich import print
 
-from resolve_snapshot_timeline import utils
+from snapper import utils
 
 utils.setup_rich_logging()
 logger = logging.getLogger(__name__)
