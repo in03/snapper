@@ -100,6 +100,7 @@ def new(
     print(
         f"[green]Latest snapshot: [bold]'{next_version_name}'[/bold] :heavy_check_mark:"
     )
+    utils.app_exit(0, 2)
 
 
 def tidy_into_snapshots_folder():
