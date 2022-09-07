@@ -1,6 +1,11 @@
-# Resolve Snapshot Timeline
+# Snapper
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/snapper/main.svg)](https://results.pre-commit.ci/latest/github/in03/snapper/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
  
+> **Warning**
+> This version only support Resolve 18.
+> Checkout the 'resolve-17' branch. Development on that branch has stopped, but pull requests are welcome.
+> Versions below 17 have not been tested but should theoretically work.
+
 ## What's it for? ##
 Sometimes you want to try out some risky idea, create a couple of variations of a clip-sequence to compare or even just have some timeline backups within easy reach.
 Resolve Snapshot Timeline does just that. It's just a quick and easy utility to create timeline versions without going for a deep dive or getting confused about the latest version.
@@ -10,28 +15,22 @@ Snapshots just sounds cool. They're just timelines with a version suffix:
 
 ## What does it need?
 **This app has a few non-negotiable prerequisites:**
-- Python 3.6 **ONLY** (DaVinci Resolve's Python API requires it)
+- Python 3.10 - install with pyenv, pipx if you want to keep things tidy
 - DaVinci Resolve Studio, with scripting set up (read Resolve's scripting README)
 
 ## How do I install it?
-
-### A Warning about Python 3.6
-Because DaVinci Resolve requires Python 3.6 to communicate with it's API, no versions over Python 3.6 will work with this app. To avoid dependency conflicts, using a tool like *pipx* to isolate installations but keep CLI entrypoints exposed is recommended:
-
-``` 
-pipx install git+https://github.com/in03/snapperg
-```
+pipx install git+https://github.com/in03/snapper
 
 ## How do I use it?
 
 ![](https://github.com/in03/snapper/blob/main/assets/usage_demo.gif)
 
 ```
-rsnaptime --help
+snapper --help
 
 RESOLVE SNAPSHOT TIMELINE 📷
 
-Usage: rsnaptime new [OPTIONS]
+Usage: snapper new [OPTIONS]
 
   Create a new timeline snapshot
 
@@ -48,9 +47,9 @@ Clone the repo, install dependencies, call from poetry shell:
 ```
 git clone https://github.com/in03/snapper
 cd snapper
-py -3.6 -m pip install poetry
-py -3.6 -m poetry shell
+python3 -m pip install poetry
+python3 -m poetry shell
 poetry install
-rsnaptime
+snapper --help
 ```
 If you're unfamiliar with using Poetry for dependency management and packaging, [give it a look](https://python-poetry.org/docs/basic-usage).
