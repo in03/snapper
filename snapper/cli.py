@@ -2,27 +2,193 @@
 Module to define CLI using Typer
 """
 
+from dataclasses import dataclass
+from distutils import core
 import logging
 import re
+import time
 
 import typer
+from typing import Any, Union
 from natsort import natsorted
 from rich import print
 
 from snapper import utils
-from snapper.resolve import ResolveObjects
+
+from pydavinci import davinci
 
 utils.setup_rich_logging()
 from pyfiglet import Figlet
 
 logger = logging.getLogger(__name__)
-logger.setLevel("INFO")
+logger.setLevel("DEBUG")
 
 fig = Figlet(font="rectangles")
+
+resolve = davinci.Resolve()
 
 app = typer.Typer()
 print(fig.renderText("snapper"))
 print("[bold]Create and manage DaVinci Resolve timeline revisions :fish:\n")
+
+
+@dataclass(repr=True)
+class ExtendedClip:
+
+    clip = Any
+    media_pool_path = Any
+
+    def __repr__(self):
+        return f"'Clip: {self.clip}, Media Pool Path: {self.media_pool_path})'"
+
+
+def get_clip_with_path(item_name: str, item_type: str) -> Union[ExtendedClip, None]:
+    """
+    Gets a clip's 'media pool path'.
+
+    There's currently no way in API to retrieve the path of an object in media pool.
+    Use it to generate subfolders relative to existing items.
+
+    Args:
+        item_name (str): The item name whose path you're looking for
+        item_type (str): The item type whose path you're looking for
+
+    Returns:
+        item_path
+    """
+    resolve = davinci.Resolve()
+
+    # Start
+    root = resolve.media_pool.root_folder
+    resolve.media_pool.set_current_folder(root)
+
+    current_path = []
+
+    def walk_folders(folder):
+        # Replace 'Master' with inital '/' in path
+        logger.debug(f"[magenta]'/{'/'.join(current_path[1:])}'")
+
+        current_path.append(folder.name)
+
+        for clip in folder.clips:
+            properties = clip.properties
+            if not properties:
+                continue
+
+            if properties["Type"] == item_type:
+                if properties["File Name"] == item_name:
+                    final_path = "/" + "/".join(current_path[1:])
+                    logger.debug(
+                        f"[magenta]Found item '{properties['File Name']}' at path '{final_path}'"
+                    )
+
+                    extended_clip = ExtendedClip()
+                    extended_clip.clip = clip
+                    extended_clip.media_pool_path = final_path
+
+                    raise StopIteration(extended_clip)
+
+        for x in folder.subfolders:
+            walk_folders(x)
+            current_path.pop()
+
+    logger.debug("[magenta]Walking media pool...")
+    try:
+        walk_folders(root)
+    except StopIteration as exception_args:
+        extended_clip = exception_args.args[0]
+        return extended_clip
+
+    return None
+
+
+def get_folder_from_media_pool_path(media_pool_path: str, create=True):
+    """
+    Gets a folder object from a 'media_pool_path' in Resolve's media pool.
+
+    Pass create to create the path if it doesn't exist.
+    Since it's using a path, it can only create one subfolder at a time.
+    Not a whole tree.
+
+    Use it to create/ensure an output path.
+
+    Args:
+        folder_path (str): Path to create folder structure from
+
+    Returns:
+        folder (folder): The Resolve folder object of the last subfolder in provided path
+    """
+
+    # cross platformish
+    media_pool_path = media_pool_path.replace("\\", "/")
+    path_segments = media_pool_path.split("/")
+    path_segments = [x for x in path_segments if x != ""]
+
+    media_pool = resolve.media_pool
+    root_folder = media_pool.root_folder
+
+    def get_subfolder(parent_folder, subfolder_name: str):
+        """
+        Return a subfolder by name within a given parent folder.
+
+        Args:
+            current_folder (Folder): _description_
+            subfolder_name (str): _description_
+
+        Returns:
+            Folder: Subfolder as media pool folder object
+        """
+        for x in parent_folder.subfolders:
+            if x.name == subfolder_name:
+                return x
+        return None
+
+    # Started from the bottom now we're here
+    media_pool.set_current_folder(root_folder)
+    current_folder = root_folder
+
+    for i, seg in enumerate(path_segments):
+
+        # If folder exists, navigate
+
+        if sub := get_subfolder(current_folder, seg):
+            logger.debug(f"[magenta]Found subfolder '{sub.name}'")
+            media_pool.set_current_folder(sub)
+            current_folder = media_pool.current_folder
+            continue
+
+        if not create:
+            raise ValueError(
+                f"Path '{media_pool_path}' doesn't exist."
+                f"Stopped at missing subfolder: '{path_segments[i:]}'"
+                "You can set 'create=True' to create the path if it should."
+            )
+
+        # If not, make the whole structure
+        remaining_segs = path_segments[i:]
+
+        for x in remaining_segs:
+
+            current_folder = media_pool.current_folder
+            logger.debug(
+                f"[magenta]Creating subfolder '{x}' in '{current_folder.name}'"
+            )
+            new_folder = media_pool.add_subfolder(x, current_folder)
+            if not media_pool.set_current_folder(new_folder):
+
+                logger.error(
+                    f"Couldn't create subfolder '{x}'"
+                    f"for path '{media_pool_path}' in media pool"
+                )
+                return None
+
+            current_folder = new_folder
+
+        logger.debug("[magenta]Created folder structure")
+        return current_folder
+
+    logger.debug("[magenta]Found all folders. Nothing created")
+    return current_folder
 
 
 @app.command()
@@ -33,38 +199,30 @@ def new(
 ):
     """Create a new timeline snapshot"""
 
-    project_manager = r_.resolve.GetProjectManager()
-    project = project_manager.GetCurrentProject()
-
     print(f"[cyan]Getting current timeline :bulb:")
-
-    current_timeline = project.GetCurrentTimeline()
-    current_timeline_name = current_timeline.GetName()
+    current_timeline = resolve.active_timeline
+    current_timeline_name = current_timeline.name
+    logger.debug(f"[magenta]Current timeline name: '{current_timeline_name}'")
 
     def get_next_version_name():
         """Get the next version number for current timeline"""
 
-        timeline_count = project.GetTimelineCount()
-
         versions = []
-        for i in range(0, timeline_count):
+        for timeline in resolve.project.timelines:
 
-            timeline_index = project.GetTimelineByIndex(i + 1)
-            timeline_name = timeline_index.GetName()
+            if timeline is not None:
 
-            if timeline_name is not None:
-
-                logger.debug(f'[magenta]Found timeline: "{timeline_name}"')
+                logger.debug(f'[magenta]Found timeline: "{timeline.name}"')
                 if re.search(
                     rf"^({current_timeline_name})(\s)(V\d+)",
-                    timeline_name,
+                    timeline.name,
                     re.IGNORECASE,
                 ):
-                    logger.debug(f"[magenta]Found snapshot: {timeline_name}")
-                    versions.append(timeline_name)
+                    logger.debug(f"[magenta]Found snapshot: {timeline.name}")
+                    versions.append(timeline.name)
 
         # If none exist, start first
-        if len(versions) == 0:
+        if not versions:
 
             logger.debug(f"[magenta]No snapshots exist. Starting first.")
             return f"{current_timeline_name} V1"
@@ -95,17 +253,35 @@ def new(
         utils.app_exit(0)
 
     print(f"[yellow]Cloning timeline :dna:")
-    current_timeline.SetName(next_version_name)  # Rename original
-    current_timeline.DuplicateTimeline(current_timeline_name)
+    current_timeline.name = next_version_name  # Rename original
+    current_timeline.duplicate_timeline(current_timeline_name)
     print(
         f"[green]Latest snapshot: [bold]'{next_version_name}'[/bold] :heavy_check_mark:"
     )
+
+    print(f"[cyan]Selecting '@Snapshots' subfolder :file_folder:")
+    extended_clip = get_clip_with_path(next_version_name, "Timeline")
+
+    if not extended_clip:
+
+        logger.warning(
+            "[yellow]Couldn't get timeline path to make snapshot subfolder! Locate and tidy up manually"
+        )
+        utils.app_exit(1, -1)
+
+    snapshots_path = extended_clip.media_pool_path + "/@Snapshots"
+    snapshots_folder = get_folder_from_media_pool_path(snapshots_path)
+
+    if not snapshots_folder:
+
+        logger.warning(
+            "[yellow]Couldn't get snapshots folder. Locate and tidy up manually"
+        )
+        utils.app_exit(1, -1)
+
+    assert resolve.media_pool.move_clips([extended_clip.clip], snapshots_folder)
+
     utils.app_exit(0, 2)
-
-
-def tidy_into_snapshots_folder():
-    """Tidy loose timeline snapshots into a versions folder"""
-    # TODO: Implement version tidy up script
 
 
 @app.callback()
@@ -122,10 +298,6 @@ def main(
 
     if verbose:
         logger.setLevel("DEBUG")
-
-    # Get resolve variables
-    global r_
-    r_ = ResolveObjects()
 
 
 if __name__ == "__main__":
