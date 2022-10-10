@@ -1,32 +1,47 @@
 # Snapper 🐟
 ![snapper-logo](https://github.com/in03/snapper/blob/main/assets/snapper_logo.svg)
- 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/snapper/main.svg)](https://results.pre-commit.ci/latest/github/in03/snapper/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-> **Warning**
->
-> This version only supports Resolve 18.
-> Checkout the 'resolve-17' branch. Development on that branch has stopped, but pull requests are welcome.
+> **Note**
+> 
+> Continued development of Snapper is for 18 and beyond only.
+> Complications with Python 3.6 being EOL make it difficult to support Resolve 17 and under.
+> If you use Resolve 17, checkout the 'resolve-17' branch. Although new features will not be ported, pull requests are welcome.
 > Versions below 17 have not been tested but should theoretically work.
 
-## What's it for? ##
-Sometimes you want to try out some risky idea, create a couple of variations of a clip-sequence to compare or even just have some timeline backups within easy reach.
-Resolve Snapshot Timeline does just that. It's just a quick and easy utility to create timeline versions without going for a deep dive or getting confused about the latest version.
-Snapshots just sounds cool. They're just timelines with a version suffix: 
+## Purpose
+Sometimes you want to try out some risky idea, create a couple of variations of something to compare, or even just have some timeline backups within easy reach when your project take some big steps. Snapper helps automate that. It's all too easy to throw 'best practice' out the window when you're on a tight turn-around. Snapper is really just a quick and easy utility to help you version your timelines. *Snapshots* sound **cool**, but really they're just timelines with a simple version number appended: 
 
-*Organisation - Project - V1, Organisation - Project - V2, Organisation* - Project - V3, etc.
+**My timeline V1**, **My timeline V2**, **My timeline V3**, etc.
 
-## What does it need?
-**This app has a few non-negotiable prerequisites:**
-- Python 3.10 - install with pyenv, pipx if you want to keep things tidy
+## Usage
+
+Simply run `snapper new` to create a new snapshot of the active timeline.
+You can run this command with a shell-script, batch-file, StreamDeck, desktop shortcut, whatever you like.  
+
+When you create a new snapshot, Snapper duplicates your active timeline, renames it as the newest version, and puts it in a subfolder called '@Snapshots' next to your working timeline. If you keep all of your timelines in one place they'll all share the same subfolder, but if you like to keep unrelated timelines in separate folders, they'll each get their own '@Snapshots' subfolder. This helps prevent one person locking all the timelines if they park on the subfolder in collaborative mode.
+
+If you still like seeing all your timeline versions in one place, you can enable the timelines smart bin in Resolve's settings - best of both worlds.
+
+## What it doesn't do
+Creating snapshots was always a point of friction for me and others I work with. That's why I made Snapper. That being said there are things I specifically don't want it to do. I want them to **stay** points of friction:
+
+Deleting snapshots - That's dangerous territory, and better left as a manual process. Just keep them - unless you work with huge timelines, they don't really bloat your projects
+
+Reverting snapshots - More often than not you'll want to do a partial revert, and there's no way of knowing how much you'd like to revert. It makes more sense to leave the very granular tools Resolve provides you to pick and choose what you want to. Plus, if we're to avoid deleting all versions upstream of a revert, we leave behind a messy, jump-around history.
+
+## Installation
+First make sure you have:
+
+- Python 3.10 - install with pyenv and pipx if you want to keep things tidy
 - DaVinci Resolve Studio, with scripting set up (read Resolve's scripting README)
 
-## How do I install it?
-`pipx install git+https://github.com/in03/snapper`
+Then run:
+```
+pipx install git+https://github.com/in03/snapper
+```
 
-## How do I use it?
-
-![Usage demo GIF](https://github.com/in03/snapper/blob/main/assets/usage_demo.gif)
+---
 
 ```
  ___ ___ ___ ___ ___ ___ ___
@@ -56,8 +71,6 @@ Options:
 Commands:
   new  Create a new timeline snapshot
 ```
-
-
 
 ## How can I contribute?
 Clone the repo, install dependencies, call from poetry shell:
