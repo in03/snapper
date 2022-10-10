@@ -22,7 +22,7 @@ Snapshots just sounds cool. They're just timelines with a version suffix:
 - DaVinci Resolve Studio, with scripting set up (read Resolve's scripting README)
 
 ## How do I install it?
-pipx install git+https://github.com/in03/snapper
+`pipx install git+https://github.com/in03/snapper`
 
 ## How do I use it?
 
