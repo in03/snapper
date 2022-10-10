@@ -4,10 +4,10 @@
 
 > **Note**
 > 
-> Continued development of Snapper is for 18 and beyond only.
-> Complications with Python 3.6 being EOL make it difficult to support Resolve 17 and under.
-> If you use Resolve 17, checkout the 'resolve-17' branch. Although new features will not be ported, pull requests are welcome.
-> Versions below 17 have not been tested but should theoretically work.
+> Currently only Resolve 18 is supported.
+> Resolve 17 and older require Python 3.6, which is now EOL. Some dependencies have started dropping support for it.
+> If you use Resolve 17, checkout the 'resolve-17' branch. You can fork that branch and any incompatible dependencies if you're feeling brave.
+> Although new features will not be ported, pull requests are welcome. The Resolve 17 branch has not been tested with older versions of Resolve.
 
 ## Purpose
 Sometimes you want to try out some risky idea, create a couple of variations of something to compare, or even just have some timeline backups within easy reach when your project take some big steps. Snapper helps automate that. It's all too easy to throw 'best practice' out the window when you're on a tight turn-around. Snapper is really just a quick and easy utility to help you version your timelines. *Snapshots* sound **cool**, but really they're just timelines with a simple version number appended: 
@@ -28,7 +28,7 @@ Creating snapshots was always a point of friction for me and others I work with.
 
 Deleting snapshots - That's dangerous territory, and better left as a manual process. Just keep them - unless you work with huge timelines, they don't really bloat your projects
 
-Reverting snapshots - More often than not you'll want to do a partial revert, and there's no way of knowing how much you'd like to revert. It makes more sense to leave the very granular tools Resolve provides you to pick and choose what you want to. Plus, if we're to avoid deleting all versions upstream of a revert, we leave behind a messy, jump-around history.
+Reverting snapshots - More often than not you'll want to do a partial revert, and there's no way of knowing how much you'd like to revert. It makes more sense to use the very granular tools Resolve provides you to pick and choose what you want to. Plus, if we're to avoid deleting all versions upstream of a revert, we leave behind a messy, jump-around history.
 
 ## Installation
 First make sure you have:
