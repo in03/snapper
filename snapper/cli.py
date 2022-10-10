@@ -59,7 +59,7 @@ def new(
                     versions.append(timeline.name)
 
         # If none exist, start first
-        if len(versions) == 0:
+        if not versions:
 
             logger.debug(f"[magenta]No snapshots exist. Starting first.")
             return f"{current_timeline_name} V1"
