@@ -2,12 +2,14 @@
 Module to define CLI using Typer
 """
 
+from dataclasses import dataclass
 from distutils import core
 import logging
 import re
+import time
 
 import typer
-from typing import Union
+from typing import Any, Union
 from natsort import natsorted
 from rich import print
 
@@ -30,50 +32,17 @@ print(fig.renderText("snapper"))
 print("[bold]Create and manage DaVinci Resolve timeline revisions :fish:\n")
 
 
-def get_clip_by_name(item_name: str, item_type: str):
-    """
-    Gets a matching clip object by name and type.
+@dataclass(repr=True)
+class ExtendedClip:
 
-    Args:
-        item_name (str): The item name
-        item_type (str): The item type
+    clip = Any
+    media_pool_path = Any
 
-    Returns:
-        clip: Clip
-    """
-    resolve = davinci.Resolve()
-
-    # Start
-    root = resolve.media_pool.root_folder
-    resolve.media_pool.set_current_folder(root)
-
-    current_path = []
-
-    def walk_folders(folder):
-
-        for clip in folder.clips:
-            properties = clip.properties
-            if not properties:
-                continue
-
-            if properties["Type"] == item_type:
-                if properties["File Name"] == item_name:
-                    logger.debug(f"[magenta]Found clip '{properties['File Name']}")
-                    raise ValueError(clip)
-
-        for x in folder.subfolders:
-            walk_folders(x)
-
-    logger.debug("[magenta]Walking media pool...")
-    try:
-        walk_folders(root)
-    except ValueError as final_path:
-        return final_path
-
-    return None
+    def __repr__(self):
+        return f"'Clip: {self.clip}, Media Pool Path: {self.media_pool_path})'"
 
 
-def get_clip_path_by_name(item_name: str, item_type: str):
+def get_clip_with_path(item_name: str, item_type: str) -> Union[ExtendedClip, None]:
     """
     Gets a clip's 'media pool path'.
 
@@ -112,7 +81,12 @@ def get_clip_path_by_name(item_name: str, item_type: str):
                     logger.debug(
                         f"[magenta]Found item '{properties['File Name']}' at path '{final_path}'"
                     )
-                    raise ValueError(final_path)
+
+                    extended_clip = ExtendedClip()
+                    extended_clip.clip = clip
+                    extended_clip.media_pool_path = final_path
+
+                    raise StopIteration(extended_clip)
 
         for x in folder.subfolders:
             walk_folders(x)
@@ -121,8 +95,9 @@ def get_clip_path_by_name(item_name: str, item_type: str):
     logger.debug("[magenta]Walking media pool...")
     try:
         walk_folders(root)
-    except ValueError as final_path:
-        return str(final_path)
+    except StopIteration as exception_args:
+        extended_clip = exception_args.args[0]
+        return extended_clip
 
     return None
 
@@ -175,11 +150,11 @@ def get_folder_from_media_pool_path(media_pool_path: str, create=True):
     for i, seg in enumerate(path_segments):
 
         # If folder exists, navigate
-        current_folder = media_pool.current_folder
 
         if sub := get_subfolder(current_folder, seg):
             logger.debug(f"[magenta]Found subfolder '{sub.name}'")
             media_pool.set_current_folder(sub)
+            current_folder = media_pool.current_folder
             continue
 
         if not create:
@@ -207,8 +182,7 @@ def get_folder_from_media_pool_path(media_pool_path: str, create=True):
                 )
                 return None
 
-            else:
-                current_folder = new_folder
+            current_folder = new_folder
 
         logger.debug("[magenta]Created folder structure")
         return current_folder
@@ -286,18 +260,18 @@ def new(
     )
 
     print(f"[cyan]Selecting '@Snapshots' subfolder :file_folder:")
-    clip = get_clip_by_name(next_version_name, "Timeline")
-    clip_path = get_clip_path_by_name(next_version_name, "Timeline")
+    extended_clip = get_clip_with_path(next_version_name, "Timeline")
 
-    if not clip or not clip_path:
+    if not extended_clip:
 
         logger.warning(
             "[yellow]Couldn't get timeline path to make snapshot subfolder! Locate and tidy up manually"
         )
         utils.app_exit(1, -1)
 
-    media_pool_path = clip_path + "/@Snapshots"
-    snapshots_folder = get_folder_from_media_pool_path(media_pool_path)
+    snapshots_path = extended_clip.media_pool_path + "/@Snapshots"
+    snapshots_folder = get_folder_from_media_pool_path(snapshots_path)
+
     if not snapshots_folder:
 
         logger.warning(
@@ -305,7 +279,7 @@ def new(
         )
         utils.app_exit(1, -1)
 
-    resolve.media_pool.move_clips([clip], snapshots_folder)
+    assert resolve.media_pool.move_clips([extended_clip.clip], snapshots_folder)
 
     utils.app_exit(0, 2)
 
