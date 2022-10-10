@@ -1,6 +1,8 @@
 # Snapper 🐟
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/snapper/main.svg)](https://results.pre-commit.ci/latest/github/in03/snapper/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![snapper-logo](https://github.com/in03/snapper/blob/main/assets/snapper_logo.svg)
  
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/in03/snapper/main.svg)](https://results.pre-commit.ci/latest/github/in03/snapper/main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 > **Warning**
 >
 > This version only supports Resolve 18.
@@ -24,21 +26,35 @@ pipx install git+https://github.com/in03/snapper
 
 ## How do I use it?
 
-![](https://github.com/in03/snapper/blob/main/assets/usage_demo.gif)
+![Usage demo GIF](https://github.com/in03/snapper/blob/main/assets/usage_demo.gif)
 
 ```
-snapper --help
+ ___ ___ ___ ___ ___ ___ ___
+|_ -|   | .'| . | . | -_|  _|
+|___|_|_|__,|  _|  _|___|_|
+            |_| |_|
 
-RESOLVE SNAPSHOT TIMELINE 📷
+Create and manage DaVinci Resolve timeline revisions 🐟
 
-Usage: snapper new [OPTIONS]
+Usage: snapper [OPTIONS] COMMAND [ARGS]...
 
-  Create a new timeline snapshot
+  Do yourself a favour and create frequent timeline snapshots. Don't leave
+  messy little experiments at the end of your timelines. Keep it tidy. Keep it
+  clean.
+
+  Just type: "snapper new"
 
 Options:
-  --dry-run / --no-dry-run  Don't duplicate the timeline, just return the next
-                            version name  [default: no-dry-run]
-  --help                    Show this message and exit.
+  --verbose / --no-verbose        Log debug messages  [default: no-verbose]
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+  --help                          Show this message and exit.
+
+Commands:
+  new  Create a new timeline snapshot
 ```
 
 
