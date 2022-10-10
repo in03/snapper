@@ -4,13 +4,15 @@ Module to define CLI using Typer
 
 import logging
 import re
+import sys
 
 import typer
 from natsort import natsorted
 from rich import print
 
 from snapper import utils
-from snapper.resolve import ResolveObjects
+
+from pydavinci import davinci
 
 utils.setup_rich_logging()
 from pyfiglet import Figlet
@@ -33,35 +35,28 @@ def new(
 ):
     """Create a new timeline snapshot"""
 
-    project_manager = r_.resolve.GetProjectManager()
-    project = project_manager.GetCurrentProject()
+    resolve = davinci.Resolve()
 
     print(f"[cyan]Getting current timeline :bulb:")
-
-    current_timeline = project.GetCurrentTimeline()
-    current_timeline_name = current_timeline.GetName()
+    current_timeline = resolve.active_timeline
+    current_timeline_name = current_timeline.name
 
     def get_next_version_name():
         """Get the next version number for current timeline"""
 
-        timeline_count = project.GetTimelineCount()
-
         versions = []
-        for i in range(0, timeline_count):
+        for timeline in resolve.project.timelines:
 
-            timeline_index = project.GetTimelineByIndex(i + 1)
-            timeline_name = timeline_index.GetName()
+            if timeline is not None:
 
-            if timeline_name is not None:
-
-                logger.debug(f'[magenta]Found timeline: "{timeline_name}"')
+                logger.debug(f'[magenta]Found timeline: "{timeline.name}"')
                 if re.search(
                     rf"^({current_timeline_name})(\s)(V\d+)",
-                    timeline_name,
+                    timeline.name,
                     re.IGNORECASE,
                 ):
-                    logger.debug(f"[magenta]Found snapshot: {timeline_name}")
-                    versions.append(timeline_name)
+                    logger.debug(f"[magenta]Found snapshot: {timeline.name}")
+                    versions.append(timeline.name)
 
         # If none exist, start first
         if len(versions) == 0:
@@ -95,8 +90,8 @@ def new(
         utils.app_exit(0)
 
     print(f"[yellow]Cloning timeline :dna:")
-    current_timeline.SetName(next_version_name)  # Rename original
-    current_timeline.DuplicateTimeline(current_timeline_name)
+    current_timeline.name = next_version_name  # Rename original
+    current_timeline.duplicate_timeline(current_timeline_name)
     print(
         f"[green]Latest snapshot: [bold]'{next_version_name}'[/bold] :heavy_check_mark:"
     )
@@ -122,10 +117,6 @@ def main(
 
     if verbose:
         logger.setLevel("DEBUG")
-
-    # Get resolve variables
-    global r_
-    r_ = ResolveObjects()
 
 
 if __name__ == "__main__":
