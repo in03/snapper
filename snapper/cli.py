@@ -10,6 +10,7 @@ import typer
 from typing import Any, Union
 from natsort import natsorted
 from rich import print
+from rich import traceback
 
 from snapper import utils
 
@@ -22,6 +23,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel("INFO")
 
 fig = Figlet(font="rectangles")
+traceback.install()
 
 resolve = davinci.Resolve()
 
