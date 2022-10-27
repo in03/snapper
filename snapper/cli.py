@@ -7,7 +7,7 @@ import logging
 import re
 
 import typer
-from typing import Any, Union
+from typing import Any
 from natsort import natsorted
 from rich import print
 from rich import traceback
@@ -42,7 +42,7 @@ class ExtendedClip:
         return f"'Clip: {self.clip}, Media Pool Path: {self.media_pool_path})'"
 
 
-def get_clip_with_path(item_name: str, item_type: str) -> Union[ExtendedClip, None]:
+def get_clip_with_path(item_name: str, item_type: str) -> ExtendedClip | None:
     """
     Gets a clip's 'media pool path'.
 

@@ -2,8 +2,6 @@ import logging
 import sys
 import time
 
-from typing import Union
-
 from rich.logging import RichHandler
 from rich.prompt import Prompt
 
@@ -38,9 +36,7 @@ def install_rich_tracebacks(show_locals=False):
     install(show_locals=show_locals)
 
 
-def app_exit(
-    level: int = 0, timeout: int = -1, cleanup_funcs: Union[list, None] = None
-):
+def app_exit(level: int = 0, timeout: int = -1, cleanup_funcs: list = []):
 
     """
     Exit function to allow time to
