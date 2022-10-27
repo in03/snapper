@@ -214,7 +214,7 @@ def new(
 
                 logger.debug(f'[magenta]Found timeline: "{timeline.name}"')
                 if re.search(
-                    rf"^({current_timeline_name})(\s)(V\d+)",
+                    rf"^({re.escape(current_timeline_name)})(\s)(V\d+)",
                     timeline.name,
                     re.IGNORECASE,
                 ):
