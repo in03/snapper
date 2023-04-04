@@ -7,7 +7,6 @@ from rich.prompt import Prompt
 
 
 def setup_rich_logging():
-
     """Set logger to rich, allowing for console markup."""
 
     FORMAT = "%(message)s"
@@ -37,7 +36,6 @@ def install_rich_tracebacks(show_locals=False):
 
 
 def app_exit(level: int = 0, timeout: int = -1, cleanup_funcs: list = []):
-
     """
     Exit function to allow time to
     read console output if necessary before exit.
@@ -47,7 +45,6 @@ def app_exit(level: int = 0, timeout: int = -1, cleanup_funcs: list = []):
 
     # Run any cleanup functions
     if cleanup_funcs:
-
         for x in cleanup_funcs:
             if x is not None:
                 x()
@@ -57,9 +54,7 @@ def app_exit(level: int = 0, timeout: int = -1, cleanup_funcs: list = []):
         sys.exit(level)
 
     else:
-
         for i in range(timeout, -1, -1):
-
             time.sleep(1)
             sys.stdout.write(f"\rExiting in " + str(i))
 

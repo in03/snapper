@@ -34,7 +34,6 @@ print("[bold]Create and manage DaVinci Resolve timeline revisions :fish:\n")
 
 @dataclass(repr=True)
 class ExtendedClip:
-
     clip = Any
     media_pool_path = Any
 
@@ -148,7 +147,6 @@ def get_folder_from_media_pool_path(media_pool_path: str, create=True):
     current_folder = root_folder
 
     for i, seg in enumerate(path_segments):
-
         # If folder exists, navigate
 
         if sub := get_subfolder(current_folder, seg):
@@ -168,14 +166,12 @@ def get_folder_from_media_pool_path(media_pool_path: str, create=True):
         remaining_segs = path_segments[i:]
 
         for x in remaining_segs:
-
             current_folder = media_pool.current_folder
             logger.debug(
                 f"[magenta]Creating subfolder '{x}' in '{current_folder.name}'"
             )
             new_folder = media_pool.add_subfolder(x, current_folder)
             if not media_pool.set_current_folder(new_folder):
-
                 logger.error(
                     f"Couldn't create subfolder '{x}'"
                     f"for path '{media_pool_path}' in media pool"
@@ -209,9 +205,7 @@ def new(
 
         versions = []
         for timeline in resolve.project.timelines:
-
             if timeline is not None:
-
                 logger.debug(f'[magenta]Found timeline: "{timeline.name}"')
                 if re.search(
                     rf"^({re.escape(current_timeline_name)})(\s)(V\d+)",
@@ -223,7 +217,6 @@ def new(
 
         # If none exist, start first
         if not versions:
-
             logger.debug(f"[magenta]No snapshots exist. Starting first.")
             return f"{current_timeline_name} V1"
 
@@ -246,7 +239,6 @@ def new(
     next_version_name = get_next_version_name()
 
     if dry_run:
-
         print(
             "[bold][yellow]Dry-run enabled:[/bold] No timeline snapshot will be created."
         )
@@ -263,7 +255,6 @@ def new(
     extended_clip = get_clip_with_path(next_version_name, "Timeline")
 
     if not extended_clip:
-
         logger.warning(
             "[yellow]Couldn't get timeline path to make snapshot subfolder! Locate and tidy up manually"
         )
@@ -273,7 +264,6 @@ def new(
     snapshots_folder = get_folder_from_media_pool_path(snapshots_path)
 
     if not snapshots_folder:
-
         logger.warning(
             "[yellow]Couldn't get snapshots folder. Locate and tidy up manually"
         )
