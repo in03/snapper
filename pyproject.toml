@@ -6,7 +6,7 @@ authors = ["Caleb Trevatt <in03@users.noreply.github.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.10.0, <4.0.0"
+python = "^3.10.0, <3.12.0"
 rich = "^12.0.1"
 natsort = "^8.1.0"
 pyfiglet = "^0.8.post1"
@@ -18,6 +18,8 @@ pre-commit = "^2.20.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.261"
+pyinstaller = "^5.10.0"
+poethepoet = "^0.19.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -26,3 +28,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 snapper = "snapper.cli:app"
 
+[tool.poe.tasks]
+build-cli = "poetry run pyinstaller snapper/cli.py --name snapper-cli-latest --onefile --collect-all pyfiglet"
+# build-gui = "poetry run pyinstaller snapper/gui.py --name bookie-gui-latest --onefile --collect-all pyfiglet"
