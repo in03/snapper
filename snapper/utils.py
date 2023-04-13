@@ -61,7 +61,7 @@ def app_exit(level: int = 0, timeout: int = -1, cleanup_funcs: list = []):
         for i in range(timeout, -1, -1):
 
             time.sleep(1)
-            sys.stdout.write(f"\rExiting in " + str(i))
+            sys.stdout.write("\rExiting in " + str(i))
 
         sys.stdout.write("\x1b[2K")
         print()

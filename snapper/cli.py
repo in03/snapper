@@ -1,23 +1,21 @@
-""" 
+"""
 Module to define CLI using Typer
 """
 
-from dataclasses import dataclass
 import logging
 import re
+from dataclasses import dataclass
+from typing import Any
 
 import typer
-from typing import Any
 from natsort import natsorted
-from rich import print
-from rich import traceback
+from pydavinci import davinci
+from pyfiglet import Figlet
+from rich import print, traceback
 
 from snapper import utils
 
-from pydavinci import davinci
-
 utils.setup_rich_logging()
-from pyfiglet import Figlet
 
 logger = logging.getLogger(__name__)
 logger.setLevel("INFO")
@@ -79,7 +77,8 @@ def get_clip_with_path(item_name: str, item_type: str) -> ExtendedClip | None:
                 if properties["File Name"] == item_name:
                     final_path = "/" + "/".join(current_path[1:])
                     logger.debug(
-                        f"[magenta]Found item '{properties['File Name']}' at path '{final_path}'"
+                        f"[magenta]Found item '{properties['File Name']}'"
+                        f"at path '{final_path}'"
                     )
 
                     extended_clip = ExtendedClip()
@@ -116,7 +115,8 @@ def get_folder_from_media_pool_path(media_pool_path: str, create=True):
         folder_path (str): Path to create folder structure from
 
     Returns:
-        folder (folder): The Resolve folder object of the last subfolder in provided path
+        folder (folder): The Resolve folder object
+        of the last subfolder in provided path
     """
 
     # cross platformish
@@ -194,12 +194,13 @@ def get_folder_from_media_pool_path(media_pool_path: str, create=True):
 @app.command()
 def new(
     dry_run: bool = typer.Option(
-        False, help="Don't duplicate the timeline, just return the next version name"
+        False,
+        help="Don't duplicate the timeline, just return the next version name",
     )
 ):
     """Create a new timeline snapshot"""
 
-    print(f"[cyan]Getting current timeline :bulb:")
+    print("[cyan]Getting current timeline :bulb:")
     current_timeline = resolve.active_timeline
     current_timeline_name = current_timeline.name
     logger.debug(f"[magenta]Current timeline name: '{current_timeline_name}'")
@@ -224,7 +225,7 @@ def new(
         # If none exist, start first
         if not versions:
 
-            logger.debug(f"[magenta]No snapshots exist. Starting first.")
+            logger.debug("[magenta]No snapshots exist. Starting first.")
             return f"{current_timeline_name} V1"
 
         # Get last snapshot version
@@ -242,30 +243,33 @@ def new(
         logger.debug(f"[magenta]Next snapshot version: '{next_version}'")
         return next_version
 
-    print(f"[cyan]Getting next snapshot version :mag_right:")
+    print("[cyan]Getting next snapshot version :mag_right:")
     next_version_name = get_next_version_name()
 
     if dry_run:
 
         print(
-            "[bold][yellow]Dry-run enabled:[/bold] No timeline snapshot will be created."
+            "[bold][yellow]Dry-run enabled:[/bold]"
+            "No timeline snapshot will be created."
         )
         utils.app_exit(0)
 
-    print(f"[yellow]Cloning timeline :dna:")
+    print("[yellow]Cloning timeline :dna:")
     current_timeline.name = next_version_name  # Rename original
     current_timeline.duplicate_timeline(current_timeline_name)
     print(
-        f"[green]Latest snapshot: [bold]'{next_version_name}'[/bold] :heavy_check_mark:"
+        "[green]Latest snapshot:"
+        f"[bold]'{next_version_name}'[/bold] :heavy_check_mark:"
     )
 
-    print(f"[cyan]Selecting '@Snapshots' subfolder :file_folder:")
+    print("[cyan]Selecting '@Snapshots' subfolder :file_folder:")
     extended_clip = get_clip_with_path(next_version_name, "Timeline")
 
     if not extended_clip:
 
         logger.warning(
-            "[yellow]Couldn't get timeline path to make snapshot subfolder! Locate and tidy up manually"
+            "[yellow]Couldn't get timeline path to make snapshot subfolder!"
+            "Locate and tidy up manually"
         )
         utils.app_exit(1, -1)
 
@@ -275,7 +279,7 @@ def new(
     if not snapshots_folder:
 
         logger.warning(
-            "[yellow]Couldn't get snapshots folder. Locate and tidy up manually"
+            "[yellow]Couldn't get snapshots folder." "Locate and tidy up manually"
         )
         utils.app_exit(1, -1)
 
