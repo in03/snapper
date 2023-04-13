@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "snapper"
-version = "0.3.0"
+version = "0.3.1"
 description = "Create a new timeline 'snapshot' to revert to when trying out risky ideas in DaVinci Resolve"
 authors = ["Caleb Trevatt <in03@users.noreply.github.com>"]
 license = "MIT"
