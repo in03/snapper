@@ -306,15 +306,15 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
-name = "pydavinci18"
-version = "0.3.0"
+name = "pydavinci-18"
+version = "0.3.1"
 description = "Fork of PyDavinci supporting Resolve 18"
 category = "main"
 optional = false
 python-versions = "<4.0.0,>=3.10.0"
 files = [
-    {file = "pydavinci18-0.3.0-py3-none-any.whl", hash = "sha256:47419408a62d574b4ad85c28946e27b15b0fc372140bcc82f0478e7afeabcdec"},
-    {file = "pydavinci18-0.3.0.tar.gz", hash = "sha256:361a6209f391240a8300d8f0f4c327041ac84b7659bfcb6a7c197d9036c6410f"},
+    {file = "pydavinci_18-0.3.1-py3-none-any.whl", hash = "sha256:72fcaeaaf7f8506641ca37a9891be57e764bcdc0cfeeb5fe9c5992ca9dda9469"},
+    {file = "pydavinci_18-0.3.1.tar.gz", hash = "sha256:1378094772b4d72fcdd58afd3e415f3316d9bcb9604f6d54aa37bc569e7c5404"},
 ]
 
 [package.dependencies]
@@ -608,4 +608,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.0, <3.12.0"
-content-hash = "93010a98c75f35b591beec7207bdb90dec37692cd706015c72552ea8b6a3ce92"
+content-hash = "5002515234cc4a77081c0d06adad7fe193a8c1541e771ff3547136ba772e0a23"
