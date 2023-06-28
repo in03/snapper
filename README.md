@@ -14,14 +14,6 @@ Sometimes you want to try out some risky idea, create a couple of variations of 
 
 **My timeline V1**, **My timeline V2**, **My timeline V3**, etc.
 
-## Usage
-
-Simply run `snapper new` to create a new snapshot of the active timeline.
-You can run this command with a shell-script, batch-file, StreamDeck, desktop shortcut, whatever you like.  
-
-When you create a new snapshot, Snapper duplicates your active timeline, renames it as the newest version, and puts it in a subfolder called '@Snapshots' next to your working timeline. If you keep all of your timelines in one place they'll all share the same subfolder, but if you like to keep unrelated timelines in separate folders, they'll each get their own '@Snapshots' subfolder. This helps prevent one person locking all the timelines if they park on the subfolder in collaborative mode.
-
-If you still like seeing all your timeline versions in one place, you can enable the timelines smart bin in Resolve's settings - best of both worlds.
 
 ## What it doesn't do
 Creating snapshots was always a point of friction for me and others I work with. That's why I made Snapper. That being said there are things I specifically don't want it to do. I want them to **stay** points of friction:
@@ -31,17 +23,38 @@ Deleting snapshots - That's dangerous territory, and better left as a manual pro
 Reverting snapshots - More often than not you'll want to do a partial revert, and there's no way of knowing how much you'd like to revert. It makes more sense to use the very granular tools Resolve provides you to pick and choose what you want to. Plus, if we're to avoid deleting all versions upstream of a revert, we leave behind a messy, jump-around history.
 
 ## Installation
-First make sure you have:
 
-- Python 3.10 - install with pyenv and pipx if you want to keep things tidy
-- DaVinci Resolve Studio, with scripting set up (read Resolve's scripting README)
+### Requirements:
+- Python 3.10 or higher
+- [pipx](https://pypa.github.io/pipx/installation/) installed 
+- DaVinci Resolve Studio, with 'local' scripting enabled:
+
+![image](https://github.com/in03/snapper/assets/13340723/aed807ac-c980-4206-9f74-626305ce786c)
+
+
+
+
 
 Then run:
+```
+pipx install dr-snapper
+```
+
+Or to install the latest git version:
 ```
 pipx install git+https://github.com/in03/snapper
 ```
 
 ---
+
+## Usage
+
+Simply run `snapper new` to create a new snapshot of the active timeline.
+You can run this command with a shell-script, batch-file, StreamDeck, desktop shortcut, whatever you like.  
+
+When you create a new snapshot, Snapper duplicates your active timeline, renames it as the newest version, and puts it in a subfolder called '@Snapshots' next to your working timeline. If you keep all of your timelines in one place they'll all share the same subfolder, but if you like to keep unrelated timelines in separate folders, they'll each get their own '@Snapshots' subfolder. This helps prevent one person locking all the timelines if they park on the subfolder in collaborative mode.
+
+If you still like seeing all your timeline versions in one place, you can enable the timelines smart bin in Resolve's settings - best of both worlds.
 
 ```
  ___ ___ ___ ___ ___ ___ ___
